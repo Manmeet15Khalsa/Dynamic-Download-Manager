@@ -1,0 +1,48 @@
+Read tcp: here we are simply connecting to the server using connect system call and we are passing the host name resolving it using getaddrinfo and port is also taken as the input.
+conf_t: maybe thi structure is useful to find the number of connectoins needed per file download.
+number of conections limit set to 4
+
+conn_init(conn_t * conn):
+axel structure also contains conf_t and conn  structure also contains conf_t which has the information regarding the number of connections in (num_connections)
+
+conn_t structure contains setup_thread attribute. and axel contains a list of conn_t structures which seems that  for each connection i am creating one thread. so how to find tht multiple threads per download??
+probably we may have multiple connections for each download and setting the start and endbyte information..may be..not sure
+
+the setup_thread the thread function is calling conn_setup
+
+conn_set is parsing a url to conn_t structure
+conn_init is establishing the connection
+
+conn_exec is sending reuest to the server and receiving the reply in the status
+
+axel_start:
+->loops from 1 to num_conections
+->setup connection using conn_set(conn_t a, char * url). parse the given url into the conn structure.
+-> axel->url=axel->url->next;
+
+conn_url:
+it is just refining the url once the port is known i.e whether it is FTP or HTTP.
+
+conn_disconect:
+it is disconecting the TCP connection
+
+conn_t structure has its field startbyte and endbyte, we can set start and end byte for the same url in different connections and can increase number of connections per download.
+in pthread function we are passing argument axel->conn[i].
+
+now look at divide ???
+axel_divide is dividing the number of connections per download
+it calculates size for each connection by total_size/num_connections
+
+
+
+proxy?? check it on internet?????
+
+now we must look at the main program of axel to find out how it is utilizing library functions to download files.
+
+axel size??
+
+
+
+conn.state= defines that a thread for that connection is running. when we try to handle disconnected connections (in axel_do loop) we check whether state is 0 or 1. if it is 1 , we wait for the termination of the thread.
+conn.enable= defines that the connection is still running.
+
